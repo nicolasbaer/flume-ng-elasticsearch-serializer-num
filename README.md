@@ -18,3 +18,14 @@ EqualsInterceptor
 This package includes an EqualsInterceptor to allow extracting header fields from the body with the following syntax: `field=value`
 In order to use it the following interceptor has to be defined: `ch.creativecode.logging.EqualsInterceptor$Builder`.
 Due to strange reasons, currently the Builder has to be specified instead of the Interceptor implementation.
+
+
+KibanaTimeStampInterceptor
+==========================
+In order to use Kibana to analyze the data properly one has to deal with the timestamp. This does not come out-of-the-box with
+the Flume Elasticsearch sink. The `KibanaTimeStampInterceptor` does the following:
+1. It looks for a header called `@timestamp` as Long (ms)
+2. It converts the value to the proper `ISODateTimeFormat`
+3. It stores the milliseconds as `timestamp` in the header. Apparently the Elasticsearch sink relies on this property.
+Therefore in order to use this interceptor, one has to set the `@timestamp` header to the event. Using the `EqualsInterceptor`
+described above the following pattern can be used in log4j: `@timestamp=%d{UNIX_MILLIS} class=%c{1} %msg`
