@@ -21,7 +21,7 @@ Due to strange reasons, currently the Builder has to be specified instead of the
 
 
 KibanaTimeStampInterceptor
-==========================
+--------------------------
 In order to use Kibana to analyze the data properly one has to deal with the timestamp. This does not come out-of-the-box with
 the Flume Elasticsearch sink. The `KibanaTimeStampInterceptor` does the following:
 1. It looks for a header called `@timestamp` as Long (ms)
