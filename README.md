@@ -13,3 +13,8 @@ In order to attach this serializer to flume the following tasks need to be perfo
 3. define the following serializer: ch.creativecode.logging.ElasticsearchNumSerializer (e.g. `a1.sinks.k1.serializer = ch.creativecode.logging.ElasticsearchNumSerializer`)
 
 
+EqualsInterceptor
+-----------------
+This package includes an EqualsInterceptor to allow extracting header fields from the body with the following syntax: `field=value`
+In order to use it the following interceptor has to be defined: `ch.creativecode.logging.EqualsInterceptor$Builder`.
+Due to strange reasons, currently the Builder has to be specified instead of the Interceptor implementation.
