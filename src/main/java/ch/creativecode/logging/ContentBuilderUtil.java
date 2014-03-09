@@ -38,9 +38,12 @@ public class ContentBuilderUtil {
                                       byte[] data) throws IOException {
 
         String dataString = new String(data, charset);
-        if (NumberUtils.isNumber(dataString)) {
+
+        if(!fieldName.toLowerCase().contains("timestamp") && NumberUtils.isNumber(dataString)){
             if (GenericValidator.isInt(dataString)) {
                 builder.field(fieldName, Integer.valueOf(dataString));
+            } else if (GenericValidator.isLong(dataString)) {
+                builder.field(fieldName, Long.valueOf(dataString));
             } else if (GenericValidator.isDouble(dataString)) {
                 builder.field(fieldName, Double.valueOf(dataString));
             } else if (GenericValidator.isFloat(dataString)) {
@@ -51,6 +54,7 @@ public class ContentBuilderUtil {
         } else {
             builder.field(fieldName, dataString);
         }
+
     }
 
     public static void addComplexField(XContentBuilder builder, String fieldName,

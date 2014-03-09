@@ -1,14 +1,15 @@
 package ch.creativecode.logging;
 
-import com.google.common.base.Charsets;
 import org.apache.flume.Context;
 import org.apache.flume.Event;
 import org.apache.flume.interceptor.Interceptor;
+import org.elasticsearch.common.joda.time.format.DateTimeFormatter;
+import org.elasticsearch.common.joda.time.format.ISODateTimeFormat;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * An interceptor for apache flume to extract patterns in the event body with
@@ -17,9 +18,10 @@ import java.util.regex.Pattern;
  *
  * @author Nicolas Baer <nicolas.baer@gmail.com>
  */
-public class EqualsInterceptor implements Interceptor {
+public class KibanaTimeStampInterceptor implements Interceptor {
+    private static final Logger logger = LoggerFactory.getLogger(KibanaTimeStampInterceptor.class);
 
-    private static final Pattern p = Pattern.compile("(@?\\w+)=([^\\s]+)");
+    private final String timestampStr = "@timestamp";
 
     @Override
     public void initialize() {
@@ -28,15 +30,16 @@ public class EqualsInterceptor implements Interceptor {
 
     @Override
     public Event intercept(Event event) {
-        String body = new String(event.getBody(), Charsets.UTF_8);
-        Matcher m = p.matcher(body);
-
         Map<String, String> headers = event.getHeaders();
-        while(m.find()) {
-            String field = m.group(1);
-            String value = m.group(2);
 
-            headers.put(field, value);
+        if(headers.containsKey(timestampStr)) {
+            String timestamp = headers.get(timestampStr);
+            Long millis = Long.parseLong(timestamp);
+            DateTimeFormatter fmt = ISODateTimeFormat.dateTime();
+            headers.put(timestampStr, fmt.print(millis));
+
+            // elasticsearch sink will look for a timestamp in milliseconds
+            headers.put("timestamp", timestamp);
         }
 
         return event;
@@ -60,7 +63,7 @@ public class EqualsInterceptor implements Interceptor {
 
         @Override
         public Interceptor build() {
-            return new EqualsInterceptor();
+            return new KibanaTimeStampInterceptor();
         }
 
         @Override
