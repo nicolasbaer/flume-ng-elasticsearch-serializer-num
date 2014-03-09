@@ -7,9 +7,9 @@ Please be aware that this implementation might not perform the very best and onl
 
 Config
 ------
-In order to attach this serializer to flume the following tasks need to be performed:
-1. `mvn clean assembly:assembly`
-2. copy the generated jar (\*-with-dependencies-\*) into the flume lib directory
-3. define the following serializer: ch.creativecode.logging.ElasticsearchNumSerializer (e.g. `a1.sinks.k1.serializer = ch.creativecode.logging.ElasticsearchNumSerializer`)
+In order to attach this serializer to flume the following tasks need to be performed:  
+1. `mvn clean assembly:assembly`  
+2. copy the generated jar (\*-with-dependencies-\*) into the flume lib directory  
+3. define the following serializer: ch.creativecode.logging.ElasticsearchNumSerializer (e.g. `a1.sinks.k1.serializer = ch.creativecode.logging.ElasticsearchNumSerializer`)  
 
 
